@@ -131,7 +131,7 @@ function StartExercising(animInfo, pos, exerciseName)
 end
 
 function CreateExerciseZones(gymName, exercises)
-    local gymConfig = Config.Gyms[gymName]  -- Access specific gym config
+    local gymConfig = Config.Gyms[gymName]
 
     for exerciseName, exerciseData in pairs(exercises) do
         local offset = exerciseData.offset or 0
@@ -258,7 +258,7 @@ for gymName, gymData in pairs(Config.Gyms) do
         inside = function()
         end,
         onEnter = function()
-            CreateExerciseZones(gymName, gymData.Exercises)  -- Pass gymName here
+            CreateExerciseZones(gymName, gymData.Exercises) 
             CreateShopZones(Config.Gyms)
         end,
         onExit = function()
