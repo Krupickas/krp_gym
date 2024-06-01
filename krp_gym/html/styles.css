@@ -1,0 +1,77 @@
+body {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; 
+    height: 100vh;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    position: relative;
+    width: 100%;
+    overflow: hidden; 
+}
+
+#stamina-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: absolute;
+    top: 90%;
+    left: 50.5%;
+    transform: translate(-50%, -50%);
+}
+
+#stamina-bar {
+    width: 200px;
+    height: 20px;
+    background-color: #555;
+    border-radius: 5px;
+    position: relative;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white; 
+    font-size: 14px; 
+}
+
+#stamina-fill {
+    height: 100%;
+    width: 50%; 
+    background-color: #4caf50;
+    border-radius: 5px;
+    position: absolute;
+    left: 0;
+    z-index: 1; 
+    transition: width 0.2s ease;
+}
+
+#stamina-text {
+    z-index: 2;
+    position: relative;
+}
+
+#instructions {
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 85%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.key {
+    background-color: #444;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-left: 10px;
+    box-shadow: 0 5px #666;
+    transition: all 0.1s ease;
+}
+
+.key.active {
+    box-shadow: 0 2px #666;
+    transform: translateY(4px);
+}

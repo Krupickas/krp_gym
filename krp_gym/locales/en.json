@@ -1,0 +1,16 @@
+{
+    "open_shop": "Open Shop",
+    "buying": "Buying",
+    "gym_shop": "Gym Shop",
+    "end_workout": "To end workout",
+    "you_need_membership": "A membership is required to access this facility.",
+    "you_dont_have_stamina": "Stamina is not fully regenerated; current stamina is ",
+    "you_are_exercising": "You are currently exercising",
+    "open_drinking_preworkoutshop": "Drinking preworkout",
+
+    "start_excercise": "Start exercise ",
+
+    "not_enough_money": "You dont have enough money ",
+    "you_bought": "You bought item ",
+    "for": " for $ "
+  }
