@@ -39,7 +39,6 @@ AttachEntityToEntity(prop2, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 57005)
 
 return {prop, prop2}
 end
-
 function StartExercising(animInfo, pos, exerciseName)
     exercising = true
     local playerPed = PlayerPedId()
@@ -74,16 +73,16 @@ function StartExercising(animInfo, pos, exerciseName)
     Citizen.CreateThread(function()
         while exercising and stamina > 0 do
             Wait(0)
-            TaskPlayAnim(playerPed, animInfo.Idle.Dict, animInfo.Idle.Anim, 8.0, -8.0, -1, 1, 0.0, 0, 0, 0) -- Loop idle animation
+            TaskPlayAnim(playerPed, animInfo.Idle.Dict, animInfo.Idle.Anim, 8.0, -8.0, -1, 1, 0.0, 0, 0, 0)
             if IsControlJustPressed(0, 22) then
                 canExercise = false
                 SendNUIMessage({action = "pressSpaceKey"})
                 PlayAnimation(playerPed, animInfo.Action.Dict, animInfo.Action.Anim, 0, animInfo.Action.Wait)
-                    if Config.Skills.SkillSystem == 'gamz' then
-                     exports["gamz-skillsystem"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
-                    else
-                        exports["B1-skillz"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
-                    end
+                if Config.Skills.SkillSystem == 'gamz' then
+                    exports["gamz-skillsystem"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
+                else
+                    exports["B1-skillz"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
+                end
                 Wait(animInfo.Action.Wait)
                 stamina = stamina - 10
                 SendNUIMessage({action = "updateStamina", value = stamina})
@@ -106,29 +105,32 @@ function StartExercising(animInfo, pos, exerciseName)
                     canExercise = false
                     shouldRegenerate = true
                     RegenerateStamina()
+                    TriggerServerEvent('gym:stopExercise', exerciseName, pos.x, pos.y, pos.z)
                 end
             end
             if IsControlJustPressed(0, 177) then
-                    FreezeEntityPosition(playerPed, false)
-                    SendNUIMessage({action = "hide"})
-                    lib.hideTextUI()
-                    PlayAnimation(playerPed, animInfo.Leave.Dict, animInfo.Leave.Anim, 0, animInfo.Leave.Wait)
-                    Wait(animInfo.Leave.Wait)
-                    ClearPedTasks(playerPed)
-                    if BarbellProp and #BarbellProp > 0 then
-                        for _, prop in ipairs(BarbellProp) do
-                            DeleteObject(prop)
-                        end
-                        BarbellProp = nil
+                FreezeEntityPosition(playerPed, false)
+                SendNUIMessage({action = "hide"})
+                lib.hideTextUI()
+                PlayAnimation(playerPed, animInfo.Leave.Dict, animInfo.Leave.Anim, 0, animInfo.Leave.Wait)
+                Wait(animInfo.Leave.Wait)
+                ClearPedTasks(playerPed)
+                if BarbellProp and #BarbellProp > 0 then
+                    for _, prop in ipairs(BarbellProp) do
+                        DeleteObject(prop)
                     end
-                    exercising = false
-                    canExercise = false
-                    shouldRegenerate = true
-                    RegenerateStamina()
+                    BarbellProp = nil
+                end
+                exercising = false
+                canExercise = false
+                shouldRegenerate = true
+                RegenerateStamina()
+                TriggerServerEvent('gym:stopExercise', exerciseName, pos.x, pos.y, pos.z)
             end
         end
     end)
 end
+
 
 function CreateExerciseZones(gymName, exercises)
     local gymConfig = Config.Gyms[gymName]
@@ -210,15 +212,7 @@ end
 
 function exerciseAction(exerciseName, x, y, z, h)
     if not exercising then
-        if stamina == 100 then
-            StartExercising(Config.Animations[exerciseName], {x = x, y = y, z = z, h = h}, exerciseName)
-        else
-            lib.notify({
-                title = 'Gym',
-                description = locale('you_dont_have_stamina') .. stamina,
-                type = 'info'
-            })
-        end
+        TriggerServerEvent('gym:tryStartExercise', exerciseName, x, y, z, h)
     else
         lib.notify({
             title = 'Gym',
@@ -228,6 +222,27 @@ function exerciseAction(exerciseName, x, y, z, h)
     end
 end
 
+RegisterNetEvent('gym:startExercise')
+AddEventHandler('gym:startExercise', function(exerciseName, x, y, z, h)
+    if stamina == 100 then
+        StartExercising(Config.Animations[exerciseName], {x = x, y = y, z = z, h = h}, exerciseName)
+    else
+        lib.notify({
+            title = 'Gym',
+            description = locale('you_dont_have_stamina') .. stamina,
+            type = 'info'
+        })
+    end
+end)
+
+RegisterNetEvent('gym:exerciseOccupied')
+AddEventHandler('gym:exerciseOccupied', function()
+    lib.notify({
+        title = 'Gym',
+        description = locale('exercise_occupied'),
+        type = 'error'
+    })
+end)
 
 function RemoveExerciseZones(exercises)
     if Config.Interaction == 'target' then
