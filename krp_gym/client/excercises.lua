@@ -81,7 +81,7 @@ function StartExercising(animInfo, pos, exerciseName)
                 if Config.Skills.SkillSystem == 'gamz' then
                     exports["gamz-skillsystem"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
                 else
-                    exports["B1-skillz"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
+         --           exports["B1-skillz"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
                 end
                 Wait(animInfo.Action.Wait)
                 stamina = stamina - 10
@@ -211,13 +211,21 @@ end
 
 
 function exerciseAction(exerciseName, x, y, z, h)
-    if not exercising then
-        TriggerServerEvent('gym:tryStartExercise', exerciseName, x, y, z, h)
+    if stamina == 100 then
+        if not exercising then
+            TriggerServerEvent('gym:tryStartExercise', exerciseName, x, y, z, h)
+        else
+            lib.notify({
+                title = 'Gym',
+                description = locale('you_are_exercising'),
+                type = 'error'
+            })
+        end
     else
         lib.notify({
             title = 'Gym',
-            description = locale('you_are_exercising'),
-            type = 'error'
+            description = locale('you_dont_have_stamina') .. stamina,
+            type = 'info'
         })
     end
 end
