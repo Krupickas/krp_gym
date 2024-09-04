@@ -81,7 +81,7 @@ function StartExercising(animInfo, pos, exerciseName)
                 if Config.Skills.SkillSystem == 'gamz' then
                     exports["gamz-skillsystem"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
                 else
-         --           exports["B1-skillz"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
+                    exports["B1-skillz"]:UpdateSkill(Config.Skills[exerciseName].skill, Config.Skills[exerciseName].add)
                 end
                 Wait(animInfo.Action.Wait)
                 stamina = stamina - 10

@@ -58,7 +58,6 @@ AddEventHandler('gym:stopExercise', function(exerciseName, x, y, z)
     local spotId = exerciseName .. "_" .. x .. "_" .. y .. "_" .. z
     exerciseSpots[spotId] = nil
 end)
-
 AddEventHandler('playerDropped', function(reason)
     local src = source
     for spotId, playerId in pairs(exerciseSpots) do
